@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\ProductFilter;
+use App\Http\Requests\Product\FilterRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Requests\Product\DestroyRequest;
 use App\Http\Requests\Product\StoreRequest;
@@ -22,8 +24,30 @@ class ProductController extends Controller
         $this->user = $user;
     }
 
-    public function index(): ProductCollection
+    public function index(FilterRequest $request): ProductCollection
     {
+        $data = $request->validated();
+
+        $filter = app()->make(ProductFilter::class, ['queryParams' => array_filter($data)]);
+
+        $posts = Product::filter($filter);
+        dd($posts);
+
+        // $data = $request->validated();
+
+        // $query = Product::query();
+
+        // if (isset($data['category_id'])) {
+        //     $query->where('category_id', $data['category_id']);
+        // }
+
+        // if (isset($data['title'])) {
+        //     $query->where('title', 'like', "%{$data['title']}%");
+        // }
+
+        // $posts = $query->get();
+        // dd($posts);
+
         return new ProductCollection($this->product->all());
     }
 
