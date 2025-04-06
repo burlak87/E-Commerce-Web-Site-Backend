@@ -31,7 +31,6 @@ class ProductController extends Controller
         $filter = app()->make(ProductFilter::class, ['queryParams' => array_filter($data)]);
 
         $posts = Product::filter($filter);
-        dd($posts);
 
         // $data = $request->validated();
 

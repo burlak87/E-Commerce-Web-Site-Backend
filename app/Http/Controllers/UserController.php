@@ -2,49 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Address\AddressRequest;
-use App\Http\Requests\Address\UpdateAddressRequest;
-use App\Http\Requests\User\UpdateUserRequest;
-use App\Http\Requests\User\UserRequest;
-use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use App\Http\Requests\User\LoginRequest;
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
+use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index() 
-    {
-      return User::all();
+  protected User $user;
+
+  public function __construct(User $user)
+  {
+    $this->user = $user;
+  }
+
+  public function show($id)
+  {
+    $user = User::findOrFail($id);
+    return response()->json($user);
+  }
+
+  public function store(StoreRequest $request)
+  {
+    $user = $this->user->create($request->validated()['user']);
+
+    $token = $user->createToken('token-name')->plainTextToken;
+
+    return response()->json(['user' => $user, 'token' => $token], 201);
+  }
+
+  public function update(UpdateRequest $request, $id)
+  {
+    $user = auth()->user(); 
+    $user->update($request->validated()['user']);
+
+    return response()->json($user);
+  }
+
+  public function login(LoginRequest $request): array
+  {
+    $credentials = $request->validated()['user'];
+
+    if (auth()->attempt($credentials)) {
+      $user = auth()->user();
+      $token = $user->createToken('token-name')->plainTextToken;
+
+      return response()->json(['token' => $token, 'user' => $user]);
     }
 
-    public function show($id) 
-    {
-      return User::find($id);
-    }
+    return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+  }
 
-    public function store(UserRequest $request) 
-    {
-      User::create($request->validated()->all());
-      return response()->json('user is added', 201);
-    }
-
-    public function update(UpdateUserRequest $request, $id) 
-    {
-      $user = User::find($id);
-
-      if (!$user) return response()->json(['message'=> 'No user found'],404);
-
-      $user->update($request->validated()->all());
-
-      return response()->json('user is updated', 201);
-    }
-
-    public function destroy($id) 
-    {
-      User::find($id)->delete();
-      return response()->json('user is deleted', 201);
-
-      // $user = User::withTrashed()->find($id);
-      // $user->restore();
-      // dd('restored');
-    }
+  public function logout(Request $request)
+  {
+    auth()->user()->tokens()->delete();
+    return response()->json(['message' => 'Logged out successfully']);
+  }
 }

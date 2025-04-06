@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('role');
             $table->string('phone');
             $table->string('email');
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password_hash');
             $table->rememberToken();
             $table->foreign('wishlist_id')->references('id')->on('wishlists')
