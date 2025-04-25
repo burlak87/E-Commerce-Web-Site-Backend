@@ -20,7 +20,7 @@ class CartController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/cart",
+     *     path="/cart",
      *     summary="Get the user's cart",
      *     @OA\Response(response="200", description="Cart details")
      * )
@@ -37,7 +37,7 @@ class CartController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/cart",
+     *     path="/cart",
      *     summary="Add an item to the cart",
      *     @OA\RequestBody(
      *         required=true,
@@ -54,7 +54,7 @@ class CartController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/cart/{id}",
+     *     path="/cart/{id}",
      *     summary="Delete an item from the cart",
      *     @OA\Parameter(
      *         name="id",
@@ -72,7 +72,7 @@ class CartController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/cart/products/{productId}/add",
+     *     path="/cart/products/{productId}/add",
      *     summary="Add a product to the cart",
      *     @OA\Parameter(
      *         name="productId",
@@ -92,7 +92,7 @@ class CartController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/cart/products/{productId}/remove",
+     *     path="/cart/products/{productId}/remove",
      *     summary="Remove a product from the cart",
      *     @OA\Parameter(
      *         name="productId",

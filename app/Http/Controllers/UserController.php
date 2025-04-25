@@ -27,7 +27,7 @@ class UserController extends Controller
 
   /**
    * @OA\Get(
-   *     path="/api/users/{id}",
+   *     path="/users/{id}",
    *     tags={"Users"},
    *     summary="Get a single user",
    *     @OA\Parameter(
@@ -55,7 +55,7 @@ class UserController extends Controller
 
   /**
    * @OA\Post(
-   *     path="/api/users",
+   *     path="/users",
    *     tags={"Users"},
    *     summary="Create a new user",
    *     @OA\RequestBody(
@@ -80,7 +80,7 @@ class UserController extends Controller
 
   /**
    * @OA\Put(
-   *     path="/api/users/{id}",
+   *     path="/users/{id}",
    *     tags={"Users"},
    *     summary="Update an existing user",
    *     @OA\Parameter(
@@ -110,7 +110,7 @@ class UserController extends Controller
 
   /**
    * @OA\Post(
-   *     path="/api/login",
+   *     path="/login",
    *     tags={"Users"},
    *     summary="User  login",
    *     @OA\RequestBody(
@@ -144,7 +144,7 @@ class UserController extends Controller
 
   /**
    * @OA\Post(
-   *     path="/api/logout",
+   *     path="/logout",
    *     tags={"Users"},
    *     summary="User  logout",
    *     @OA\Response(

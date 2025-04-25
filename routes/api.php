@@ -34,60 +34,60 @@ Route::middleware('auth')->group(function () {
 //put - все
 
 //Address
-Route::get('/address', [AddressController::class, 'index'])->name('addresses');
-Route::get('/address/{id}', [AddressController::class, 'show'])->name('address');
-Route::post('/address', [AddressController::class, 'store'])->name('create-address');
-Route::patch('/address/update/{id}', [AddressController::class, 'update'])->name('update-address');
-Route::delete('/address', [AddressController::class, 'destroy'])->name('delete-address');
+Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
+Route::get('/addresses/{id}', [AddressController::class, 'show'])->name('address');
+Route::post('/addresses', [AddressController::class, 'store'])->name('create-address');
+Route::patch('/addresses/{id}', [AddressController::class, 'update'])->name('update-address');
+Route::delete('/addresses/{id}', [AddressController::class, 'destroy'])->name('delete-address');
 
 //Cart
-Route::get('/cartItem', [CartController::class, 'index'])->name('cartItem');
-Route::post('/cartItem', [CartController::class, 'store'])->name('create-cartItem');
-Route::delete('/cartItem', [CartController::class, 'destroy'])->name('delete-cartItem');
-Route::post('/cartItem/addToCart', [CartController::class, 'addToCart'])->name('addToCart');
-Route::delete('/cartItem/removeFromCart', [CartController::class, 'removeFromCart'])->name('removeFromCart');
+Route::get('/cart', [CartController::class, 'index'])->name('cartItem');
+Route::post('/cart', [CartController::class, 'store'])->name('create-cartItem');
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('delete-cartItem');
+Route::post('/cart/product/{productId}/add', [CartController::class, 'addToCart'])->name('addToCart');
+Route::delete('/cart/product/{productId}/remove', [CartController::class, 'removeFromCart'])->name('removeFromCart');
 
 //CartItem
-Route::get('/cart', [CartItemController::class, 'index'])->name('cart');
-Route::post('/cart', [CartItemController::class, 'store'])->name('create-cart');
-Route::delete('/cart', [CartItemController::class, 'destroy'])->name('delete-cart');
+Route::get('/cart/items', [CartItemController::class, 'index'])->name('cart');
+Route::post('/cart/{cartId}/items', [CartItemController::class, 'store'])->name('create-cart');
+Route::delete('/cart/items/{id}', [CartItemController::class, 'destroy'])->name('delete-cart');
 
 //MyOrders
-Route::get('/myOrder', [MyOrdersController::class, 'index'])->name('myOrders');
-Route::get('/myOrder/{id}', [MyOrdersController::class, 'show'])->name('myOrder');
-Route::post('/myOrder', [MyOrdersController::class, 'store'])->name('create-myOrder');
-Route::patch('/myOrder/{id}', [MyOrdersController::class, 'update'])->name('update-myOrder');
-Route::delete('/myOrder', [MyOrdersController::class, 'destroy'])->name('delete-myOrder');
+Route::get('/my-orders', [MyOrdersController::class, 'index'])->name('myOrders');
+Route::get('/my-orders/{id}', [MyOrdersController::class, 'show'])->name('myOrder');
+Route::post('/my-orders', [MyOrdersController::class, 'store'])->name('create-myOrder');
+Route::patch('/my-orders/{id}', [MyOrdersController::class, 'update'])->name('update-myOrder');
+Route::delete('/my-orders/{id}', [MyOrdersController::class, 'destroy'])->name('delete-myOrder');
 
 //OrderDetail
-Route::get('/orderDetail', [OrderDetailController::class, 'index'])->name('orderDetails');
-Route::post('/orderDetail', [OrderDetailController::class, 'store'])->name('create-orderDetail');
-Route::delete('/orderDetail', [OrderDetailController::class, 'destroy'])->name('delete-orderDetail');
-Route::post('/orderDetail/addToOrderDetail', [OrderDetailController::class, 'addToOrderDetail'])->name('addToOrderDetail');
-Route::delete('/orderDetail/removeFromOrderDetail', [OrderDetailController::class, 'removeFromOrderDetail'])->name('removeFromOrderDetail');
+Route::get('/order-details', [OrderDetailController::class, 'index'])->name('orderDetails');
+Route::post('/order-detail', [OrderDetailController::class, 'store'])->name('create-orderDetail');
+Route::delete('/order-detail/{id}', [OrderDetailController::class, 'destroy'])->name('delete-orderDetail');
+Route::post('/orderDetail/{id}/add', [OrderDetailController::class, 'addToOrderDetail'])->name('addToOrderDetail');
+Route::delete('/order-details/{id}/remove', [OrderDetailController::class, 'removeFromOrderDetail'])->name('removeFromOrderDetail');
 
 //OrderItem
-Route::get('/orderItem', [OrderItemController::class, 'index'])->name('orderItem');
-Route::post('/orderItem', [OrderItemController::class, 'store'])->name('create-orderItem');
-Route::delete('/orderItem', [OrderItemController::class, 'destroy'])->name('delete-orderItem');
+Route::get('/order-items', [OrderItemController::class, 'index'])->name('orderItem');
+Route::post('/order-items', [OrderItemController::class, 'store'])->name('create-orderItem');
+Route::delete('/order-items/{id}', [OrderItemController::class, 'destroy'])->name('delete-orderItem');
 
 //Product
-Route::get('/product', [ProductController::class, 'index'])->name('products');
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
-Route::post('/product', [ProductController::class, 'store'])->name('create-product');
-Route::patch('/product/update', [ProductController::class, 'update'])->name('update-product');
-Route::delete('/product', [ProductController::class, 'destroy'])->name('delete-product');
+Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('product');
+Route::post('/products', [ProductController::class, 'store'])->name('create-product');
+Route::patch('/products/{id}', [ProductController::class, 'update'])->name('update-product');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('delete-product');
 
 //Review
-Route::get('/review', [ReviewController::class, 'index'])->name('reviews');
-Route::get('/review/{id}', [ReviewController::class, 'show'])->name('review');
-Route::post('/review', [ReviewController::class, 'store'])->name('create-review');
-Route::delete('/review', [ReviewController::class, 'destroy'])->name('delete-review');
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
+Route::get('/reviews/{id}', [ReviewController::class, 'show'])->name('review');
+Route::post('/reviews', [ReviewController::class, 'store'])->name('create-review');
+Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('delete-review');
 
 //User
-Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
-Route::post('/user', [UserController::class, 'store'])->name('create-user');
-Route::patch('/user/update', [UserController::class, 'update'])->name('update-user');
+Route::get('/users/{id}', [UserController::class, 'show'])->name('user');
+Route::post('/users', [UserController::class, 'store'])->name('create-user');
+Route::patch('/users/{id}', [UserController::class, 'update'])->name('update-user');
 
 // User-log
 Route::post('/login', [UserController::class, 'login'])->name('login');
@@ -96,13 +96,11 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 //Wishlist
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlists');
 Route::post('/wishlist', [WishlistController::class, 'store'])->name('create-wishlist');
-Route::delete('/wishlist', [WishlistController::class, 'destroy'])->name('delete-wishlist');
-Route::post('/wishlist/addToWishlist', [WishlistController::class, 'addToCart'])->name('addToWishlist');
-Route::delete('/wishlist/removeFromWishlist', [WishlistController::class, 'update'])->name('removeFromWishlist');
+Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('delete-wishlist');
+Route::post('/wishlist/{id}/add', [WishlistController::class, 'addToCart'])->name('addToWishlist');
+Route::delete('/wishlist/{id}/remove', [WishlistController::class, 'update'])->name('removeFromWishlist');
 
 //WishlistItem
-Route::get('/wishlistItem', [WishlistItemController::class, 'index'])->name('wishlistItem');
-Route::post('/wishlistItem', [WishlistItemController::class, 'store'])->name('create-wishlistItem');
-Route::delete('/wishlistItem', [WishlistItemController::class, 'destroy'])->name('delete-wishlistItem');
-
-// Route::get('/admin-dashboard', [MovieController::class, 'indexAll'])->middleware(['auth', 'verified'])->name('admin-dashboard');
+Route::get('/wishlist-items', [WishlistItemController::class, 'index'])->name('wishlistItem');
+Route::post('/wishlist/{wishlistId}/items', [WishlistItemController::class, 'store'])->name('create-wishlistItem');
+Route::delete('/wishlist-items/{id}', [WishlistItemController::class, 'destroy'])->name('delete-wishlistItem');

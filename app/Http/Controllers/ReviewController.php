@@ -18,7 +18,7 @@ class ReviewController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/reviews",
+     *     path="/reviews",
      *     tags={"Reviews"},
      *     summary="Get list of reviews",
      *     @OA\Response(
@@ -41,7 +41,7 @@ class ReviewController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/reviews/{id}",
+     *     path="/reviews/{id}",
      *     tags={"Reviews"},
      *     summary="Get a single review",
      *     @OA\Parameter(
@@ -69,7 +69,7 @@ class ReviewController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/reviews",
+     *     path="/reviews",
      *     tags={"Reviews"},
      *     summary="Create a new review",
      *     @OA\RequestBody(
@@ -91,7 +91,7 @@ class ReviewController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/reviews/{id}",
+     *     path="/reviews/{id}",
      *     tags={"Reviews"},
      *     summary="Delete a review",
      *     @OA\Parameter(

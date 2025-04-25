@@ -29,7 +29,7 @@ class AddressController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/addresses",
+     *     path="/addresses",
      *     summary="Get a list of addresses",
      *     @OA\Response(response="200", description="A list of addresses")
      * )
@@ -41,7 +41,7 @@ class AddressController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/addresses/{id}",
+     *     path="/addresses/{id}",
      *     summary="Get a specific address",
      *     @OA\Parameter(
      *         name="id",
@@ -59,7 +59,7 @@ class AddressController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/addresses",
+     *     path="/addresses",
      *     summary="Create a new address",
      *     @OA\RequestBody(
      *         required=true,
@@ -70,13 +70,13 @@ class AddressController extends Controller
      */
     public function store(StoreAddressRequest $request): AddressResource
     {
-        $address = auth()->user()->addresses()->created($request->validated()['address']);
+        $address = auth()->user()->addresses()->create($request->validated()['addresses']);
         return $this->addressResponse($address);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/addresses/{id}",
+     *     path="/addresses/{id}",
      *     summary="Update an existing address",
      *     @OA\Parameter(
      *         name="id",
@@ -99,7 +99,7 @@ class AddressController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/addresses/{id}",
+     *     path="/addresses/{id}",
      *     summary="Delete an address",
      *     @OA\Parameter(
      *         name="id",
