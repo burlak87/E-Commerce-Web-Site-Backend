@@ -15,6 +15,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection $user
  * @property Collection $product
  */
+
+/**
+ * @OA\Schema(
+ *     title="Review",
+ *     description="Review model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID of the review"),
+ *     @OA\Property(property="rating", type="integer", description="Rating given by the user"),
+ *     @OA\Property(property="comment", type="string", description="Comment provided by the user"),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", description="Timestamp when the review was created"),
+ *     @OA\Property(property="user", ref="#/components/schemas/User"),
+ *     @OA\Property(property="product", ref="#/components/schemas/Product")
+ * )
+ */
 class Review extends Model
 {
     /** @use HasFactory<\Database\Factories\ReviewFactory> */

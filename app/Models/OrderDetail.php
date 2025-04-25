@@ -13,6 +13,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $total_amount
  * @property Collection $address
  */
+
+/**
+ * @OA\Schema( 
+ *     title="OrderDetail",
+ *     description="Order Detail model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID детали заказа"),
+ *     @OA\Property(property="total_amount", type="string", description="Общая сумма заказа"),
+ *     @OA\Property(property="address", ref="#/components/schemas/Address"),
+ *     @OA\Property(property="myorders", ref="#/components/schemas/MyOrders"),
+ *     @OA\Property(property="orderitem", type="array", @OA\Items(ref="#/components/schemas/OrderItem"))
+ * ) 
+ */
 class OrderDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderDetailFactory> */

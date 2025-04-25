@@ -3,21 +3,19 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WishlistItem>
- */
 class WishlistItemFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $productIds = DB::table('products')->pluck('id')->toArray();
+        $wishlistIds = DB::table('wishlists')->pluck('id')->toArray();
+
         return [
-            //
+            'wishlist_id' => $wishlistIds[array_rand($wishlistIds)],
+            'product_id' => $productIds[array_rand($productIds)],
+            'quantity' => fake()->numberBetween(1, 5),
         ];
     }
 }

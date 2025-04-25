@@ -1,0 +1,15 @@
+address:
+
+  post:
+    {
+      "id": 6,
+      "country": "italy",
+      "company": "",
+      "street": "Nakia Street",
+      "house": 8816,
+      "apartment": "",
+      "city": "Mitchellside",
+      "state": "Maine",
+      "postal_code": 46583,
+      "delivery_instruction": "Amet praesentium officia"
+    }

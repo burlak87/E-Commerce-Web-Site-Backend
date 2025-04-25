@@ -11,6 +11,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $total_amount
  */
+
+/**
+ * @OA\Schema(
+ *     title="Wishlist",
+ *     description="Wishlist model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID of the wishlist"),
+ *     @OA\Property(property="total_amount", type="string", description="Total amount of the wishlist")
+ * )
+ */
 class Wishlist extends Model
 {
     /** @use HasFactory<\Database\Factories\WishlistFactory> */

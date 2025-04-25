@@ -8,15 +8,8 @@ use Illuminate\Database\Seeder;
 
 class WishlistSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
-            Wishlist::query()->upsert([
-                'total_amount' => fake()->numberBetween(300, 1200),
-            ], 'id');
-        };
+        Wishlist::factory()->count(5)->create();
     }
 }

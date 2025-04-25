@@ -13,6 +13,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection $wishlist
  * @property Collection $product
  */
+
+/**
+ * @OA\Schema(
+ *     title="WishlistItem",
+ *     description="Wishlist Item model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID of the wishlist item"),
+ *     @OA\Property(property="quantity", type="string", description="Quantity of the product in the wishlist"),
+ *     @OA\Property(property="wishlist", ref="#/components/schemas/Wishlist"),
+ *     @OA\Property(property="product", ref="#/components/schemas/Product")
+ * )
+ */
 class WishlistItem extends Model
 {
     /** @use HasFactory<\Database\Factories\WishlistItemFactory> */

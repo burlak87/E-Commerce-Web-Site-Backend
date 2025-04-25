@@ -8,23 +8,17 @@ use Illuminate\Database\Seeder;
 
 class AddressSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
-            Address::query()->upsert([
-                'country' => fake()->country(),
-                'company' => '',
-                'street' => fake()->streetName(),
-                'house' => fake()->buildingNumber(),
-                'apartment' => '',
-                'city' => fake()->city(),
-                'state' => fake()->state(),
-                'postal_code' => fake()->postcode(),
-                'delivery_instruction' => fake()->paragraph()
-            ], 'id');
-        }
+        Address::factory()->count(5)->create();
+
+        // $genreId = Genre::pluck("id")->toArray();
+
+        // $movies = Movie::factory()->count(5)->create();
+        
+        // $movies->each(function (Movie $movie) use ($genreId) {
+        //     $randomGenreIds = Arr::random($genreId, rand(1, 5));
+        //     $movie->genres()->attach($randomGenreIds);
+        // });
     }
 }

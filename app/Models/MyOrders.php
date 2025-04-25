@@ -16,6 +16,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $estimated_date
  * @property string $payment_method
  */
+
+/**
+ * @OA\Schema(
+ *     title="MyOrders",
+ *     description="My Orders model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID заказа"),
+ *     @OA\Property(property="status", type="string", description="Статус заказа"),
+ *     @OA\Property(property="number", type="string", description="Номер заказа"),
+ *     @OA\Property(property="date", type="string", format="date-time", description="Дата заказа"),
+ *     @OA\Property(property="estimated_date", type="string", format="date-time", description="Предполагаемая дата доставки"),
+ *     @OA\Property(property="payment_method", type="string", description="Метод оплаты"),
+ *     @OA\Property(property="orderdetail", ref="#/components/schemas/OrderDetail"),
+ *     @OA\Property(property="user", ref="#/components/schemas/User")
+ * )
+ */
 class MyOrders extends Model
 {
     /** @use HasFactory<\Database\Factories\MyOrdersFactory> */

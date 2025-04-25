@@ -19,16 +19,18 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('password_hash');
+            $table->unsignedBigInteger('wishlist_id');
+            $table->unsignedBigInteger('my_order_id');
+            $table->unsignedBigInteger('address_id');
             $table->rememberToken();
+            $table->timestamps();
+            $table->softDeletes();
             $table->foreign('wishlist_id')->references('id')->on('wishlists')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('my_order_id')->references('id')->on('my_orders')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('address_id')->references('id')->on('addresses')
                 ->onDelete('cascade')->onUpdate('cascade');
-            $table->timestamps();
-
-            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

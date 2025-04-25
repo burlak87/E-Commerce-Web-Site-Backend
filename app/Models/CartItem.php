@@ -12,6 +12,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection $cart
  * @property Collection $product
  */
+
+/**
+ * @OA\Schema(
+ *     title="CartItem",
+ *     description="Cart Item model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID элемента корзины"),
+ *     @OA\Property(property="quantity", type="integer", description="Количество продукта в корзине"),
+ *     @OA\Property(property="cart", ref="#/components/schemas/Cart"),
+ *     @OA\Property(property="product", ref="#/components/schemas/Product")
+ * )
+ */
 class CartItem extends Model
 {
     /** @use HasFactory<\Database\Factories\CartItemFactory> */

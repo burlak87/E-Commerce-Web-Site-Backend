@@ -3,21 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderDetail>
- */
 class OrderDetailFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $addressIds = DB::table('addresses')->pluck('id')->toArray();
+
         return [
-            //
+            'total_amount' => fake()->numberBetween(300, 1200),
+            'address_id' => $addressIds[array_rand($addressIds)],
         ];
     }
 }

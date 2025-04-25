@@ -13,6 +13,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection $order_detail
  * @property Collection $product
  */
+
+/**
+ * @OA\Schema(
+ *     title="OrderItem",
+ *     description="Order Item model",
+ *     @OA\Property(property="id", type="integer", format="int64", description="ID элемента заказа"),
+ *     @OA\Property(property="quantity", type="integer", description="Количество продукта в заказе"),
+ *     @OA\Property(property="orderdetail", ref="#/components/schemas/OrderDetail"),
+ *     @OA\Property(property="product", ref="#/components/schemas/Product")
+ * )
+ */
 class OrderItem extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderItemFactory> */

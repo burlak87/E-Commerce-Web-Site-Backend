@@ -3,21 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Cart>
- */
 class CartFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $userIds = DB::table('users')->pluck('id')->toArray();
+
         return [
-            //
+            'user_id' => $userIds[array_rand($userIds)],
+            'total_amount' => fake()->numberBetween(300, 1200),
         ];
     }
 }
