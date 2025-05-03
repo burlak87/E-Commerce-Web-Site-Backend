@@ -14,23 +14,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
-            $table->string('lost_name');
-            $table->string('role');
+            $table->string('last_name');
+            $table->string('role')->nullable();
             $table->string('phone');
             $table->string('email');
-            $table->string('password_hash');
-            $table->unsignedBigInteger('wishlist_id');
-            $table->unsignedBigInteger('my_order_id');
-            $table->unsignedBigInteger('address_id');
+            $table->string('password');
+            $table->unsignedBigInteger('wishlist_id')->nullable();
+            $table->unsignedBigInteger('my_order_id')->nullable();
+            $table->unsignedBigInteger('address_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('wishlist_id')->references('id')->on('wishlists')
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('my_order_id')->references('id')->on('my_orders')
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('address_id')->references('id')->on('addresses')
-                ->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

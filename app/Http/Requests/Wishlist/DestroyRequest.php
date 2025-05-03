@@ -8,7 +8,8 @@ class DestroyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->route('wishlist')->user->id === auth()->id();
+        $wishlist = $this->route('wishlist');
+        return $wishlist && $wishlist->user_id === auth()->id(); 
     }
     public function rules(): array
     {

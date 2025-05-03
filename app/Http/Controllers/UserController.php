@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Psr7\Message;
+use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\LoginRequest;
@@ -9,12 +13,6 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 
-/**
- * @OA\Tag(
- *     name="Users",
- *     description="Operations about users"
- * )
- */
 class UserController extends Controller
 {
   protected User $user;
@@ -24,138 +22,81 @@ class UserController extends Controller
     $this->user = $user;
   }
 
-
-  /**
-   * @OA\Get(
-   *     path="/users/{id}",
-   *     tags={"Users"},
-   *     summary="Get a single user",
-   *     @OA\Parameter(
-   *         name="id",
-   *         in="path",
-   *         required=true,
-   *         @OA\Schema(type="integer")
-   *     ),
-   *     @OA\Response(
-   *         response=200,
-   *         description="A single user",
-   *         @OA\JsonContent(ref="#/components/schemas/User")
-   *     ),
-   *     @OA\Response(
-   *         response=404,
-   *         description="User  not found"
-   *     )
-   * )
-   */
   public function show($id)
   {
     $user = User::findOrFail($id);
     return response()->json($user);
   }
 
-  /**
-   * @OA\Post(
-   *     path="/users",
-   *     tags={"Users"},
-   *     summary="Create a new user",
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/UserRequest")
-   *     ),
-   *     @OA\Response(
-   *         response=201,
-   *         description="User  created",
-   *         @OA\JsonContent(ref="#/components/schemas/UserResponse")
-   *     )
-   * )
-   */
   public function store(StoreRequest $request)
   {
-    $user = $this->user->create($request->validated()['user']);
+    $data = $request->validated()['user'];
+
+    $data['password'] = bcrypt($data['password']);
+
+    $user = $this->user->create($data);
 
     $token = $user->createToken('token-name')->plainTextToken;
 
     return response()->json(['user' => $user, 'token' => $token], 201);
   }
 
-  /**
-   * @OA\Put(
-   *     path="/users/{id}",
-   *     tags={"Users"},
-   *     summary="Update an existing user",
-   *     @OA\Parameter(
-   *         name="id",
-   *         in="path",
-   *         required=true,
-   *         @OA\Schema(type="integer")
-   *     ),
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/UserRequest")
-   *     ),
-   *     @OA\Response(
-   *         response=200,
-   *         description="User  updated",
-   *         @OA\JsonContent(ref="#/components/schemas/UserResponse")
-   *     )
-   * )
-   */
-  public function update(UpdateRequest $request, $id)
+  public function update(UpdateRequest $request, $id): JsonResponse
   {
-    $user = auth()->user(); 
-    $user->update($request->validated()['user']);
+    $user = $request->user();
 
-    return response()->json($user);
+    \Log::info('Authenticated user:', ['user' => $user]);
+
+    if (!$user || $user->id !== (int)$id) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $data = $request->input('user');
+
+    if (isset($data['first_name'])) {
+      $user->first_name = $data['first_name'];
+    }
+
+    if (isset($data['last_name'])) {
+      $user->last_name = $data['last_name'];
+    }
+
+    if (isset($data['role'])) {
+      $user->role = $data['role'];
+    }
+
+    if (isset($data['phone'])) {
+      $user->phone = $data['phone'];
+    }
+
+    if (isset($data['email'])) {
+      $user->email = $data['email'];
+    }
+
+    if (isset($data['password'])) {
+      $user->password = bcrypt($data['password']);
+    }
+
+    $user->save();
+
+    return response()->json(['message' => 'User  updated successfully', 'user' => $user], 200);
   }
 
-  /**
-   * @OA\Post(
-   *     path="/login",
-   *     tags={"Users"},
-   *     summary="User  login",
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(ref="#/components/schemas/LoginRequest")
-   *     ),
-   *     @OA\Response(
-   *         response=200,
-   *         description="User  logged in",
-   *         @OA\JsonContent(ref="#/components/schemas/LoginResponse")
-   *     ),
-   *     @OA\Response(
-   *         response=401,
-   *         description="Unauthorized"
-   *     )
-   * )
-   */
-  public function login(LoginRequest $request): array
+  public function login(LoginRequest $request): JsonResource
   {
     $credentials = $request->validated()['user'];
+    $credentials['password'] = bcrypt($credentials['password']);
 
     if (auth()->attempt($credentials)) {
       $user = auth()->user();
       $token = $user->createToken('token-name')->plainTextToken;
-
-      return response()->json(['token' => $token, 'user' => $user]);
+      
+      return new JsonResource(['message' => $token, 'user' => $user]);
     }
 
-    return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+    return new JsonResource(['message' => 'Unauthorized']);
   }
 
-  /**
-   * @OA\Post(
-   *     path="/logout",
-   *     tags={"Users"},
-   *     summary="User  logout",
-   *     @OA\Response(
-   *         response=200,
-   *         description="User  logged out successfully",
-   *         @OA\JsonContent(
-   *             @OA\Property(property="message", type="string", example="Logged out successfully")
-   *         )
-   *     )
-   * )
-   */
   public function logout(Request $request)
   {
     auth()->user()->tokens()->delete();

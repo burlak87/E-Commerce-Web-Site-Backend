@@ -2,37 +2,19 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Resources\WishlistItemResource;
+use App\Http\Resources\WishlistResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Requests\WishlistItem\DestroyRequest;
 use App\Http\Requests\WishlistItem\StoreRequest;
 use App\Models\Wishlist;
+use App\Models\Product;
 use App\Models\WishlistItem;
 use Illuminate\Http\JsonResponse;
 
-/**
- * @OA\Tag(
- *     name="WishlistItem",
- *     description="Operations related to items in the wishlist"
- * )
- */
 class WishlistItemController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/wishlist-items",
-     *     tags={"WishlistItem"},
-     *     summary="Get all items in the wishlist",
-     *     @OA\Response(
-     *         response=200,
-     *         description="A list of items in the wishlist",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="wishlistItems", type="array", @OA\Items(ref="#/components/schemas/WishlistItemResource")),
-     *             @OA\Property(property="count", type="integer")
-     *         )
-     *     )
-     * )
-     */
     public function index(): JsonResponse
     {
         $wishlistItems = WishlistItem::all();
@@ -44,59 +26,37 @@ class WishlistItemController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/wishlist/{wishlistId}/items",
-     *     tags={"WishlistItem"},
-     *     summary="Add a new item to the wishlist",
-     *     @OA\Parameter(
-     *         name="wishlistId",
-     *         in="path",
-     *         required=true,
-     *         description="Wishlist ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/StoreRequest")
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Wishlist item created successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/WishlistItemResource")
-     *     )
-     * )
-     */
-    public function store(wishlist $wishlist, StoreRequest $request) 
+    public function addWishlistItem(WishlistItem $wishlistItem, StoreRequest $request): array
     {
-        $wishlistItem = $wishlist->wishlistItems()->create([
+        $wishlistItems = $wishlistItem->create([
             'quantity' => $request->item['quantity'],
-            'product' => $request->product['id'],
+            'wishlist_id' => $request->wishlist['id'],
+            'product_id' => $request->product['id'],
         ]);
 
-        return new WishlistItemResource($wishlistItem);
+        $wishlist = Wishlist::find($request->wishlist['id']);
+        $product = Product::find($request->product['id']);
+
+        return [
+            'wishlist_item' => new WishlistItemResource($wishlistItems),
+            'wishlist' => $this->wishlistResponse($wishlist),
+            'product' => $this->productResponse($product),
+        ];
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/wishlist-items/{id}",
-     *     tags={"WishlistItem"},
-     *     summary="Delete a wishlist item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="Wishlist Item ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="Wishlist item deleted successfully"
-     *     )
-     * )
-     */
-    public function destroy(WishlistItem $wishlistItem, DestroyRequest $request): void
+    public function removeWishlistItem(WishlistItem $wishlistItem, DestroyRequest $request): JsonResponse
     {
         $wishlistItem->delete();
+        return response()->json(['message' => 'Wishlist item deleted successfully'], 201);
+    }
+
+    public function wishlistResponse(Wishlist $wishlist): WishlistResource
+    {
+        return new WishlistResource($wishlist);
+    }
+
+    public function productResponse(Product $product): ProductResource
+    {
+        return new ProductResource($product);
     }
 }

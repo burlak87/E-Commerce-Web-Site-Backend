@@ -14,11 +14,11 @@ class UserFactory extends Factory
     {
         return [
             'first_name' => fake()->firstName(),
-            'lost_name' => fake()->lastName(),
+            'last_name' => fake()->lastName(),
             'role' => fake()->randomElement(['admin', 'user', 'moderator']),
             'phone' => fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
-            'password_hash' => bcrypt('password'), 
+            'password' => bcrypt('password'), 
             'remember_token' => Str::random(10),
             'wishlist_id' => rand(1, 5),
             'my_order_id' => rand(1, 5),

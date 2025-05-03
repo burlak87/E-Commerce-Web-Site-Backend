@@ -22,7 +22,10 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('postal_code');
             $table->string('delivery_instruction');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

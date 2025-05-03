@@ -11,13 +11,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ProductSeeder::class,
+            UserSeeder::class, 
             AddressSeeder::class,
             OrderDetailSeeder::class,
             OrderItemSeeder::class,
             MyOrdersSeeder::class,
             WishlistSeeder::class,
             WishlistItemSeeder::class,
-            UserSeeder::class,    
             ReviewSeeder::class,
             CartSeeder::class,
             CartItemSeeder::class,

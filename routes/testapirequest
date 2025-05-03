@@ -1,29 +1,22 @@
 address:
-
   post:
     {
-      "id": 6,
       "country": "italy",
-      "company": "",
       "street": "Nakia Street",
       "house": 8816,
-      "apartment": "",
       "city": "Mitchellside",
       "state": "Maine",
       "postal_code": 46583,
       "delivery_instruction": "Amet praesentium officia"
     }
 
-cartItem:
+cart:
   post:
     {
-      "total_amount": "500",
-      "user_id": 1,
-      "created_at": "2025-04-22T19:21:33.000000Z",
-      "updated_at": "2025-04-22T19:21:33.000000Z"
+      
     }
 
-cart:
+cartItem:
   post:
     {
 
@@ -32,7 +25,14 @@ cart:
 myOrders:
   post:
     {
-
+      "my-order": {
+        "status": "done",
+        "number": "ZFMPF201",
+        "date": "1993-11-29",
+        "estimated_date": "1986-04-16",
+        "payment_method": "4539-0103-3218-5710",
+        "order_details_id": 4
+      }
     }
 
 orderDetail:
@@ -56,7 +56,10 @@ product
 review
   post:
     {
-
+      "rating": 4,
+      "comment": "Nice food",
+      "product_id": 2,
+      "user_id": 3
     }
 
 user

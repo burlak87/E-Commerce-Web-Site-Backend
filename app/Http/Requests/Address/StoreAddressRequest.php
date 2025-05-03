@@ -14,15 +14,15 @@ class StoreAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required|string|max:255',
-            'company' => 'sometimes|string|max:255',
-            'street' => 'required|string|max:2048',
-            'house' => 'required|integer',
-            'apartment' => 'sometimes|integer',
-            'city' => 'required|string|max:255',
-            'state' => 'sometimes|string|max:255',
-            'postal_code' => 'required|integer',
-            'delivery_instruction' => 'required|string|max:2048'
+            'addresses.country' => 'required|string',
+            'addresses.company' => 'sometimes|string',
+            'addresses.street' => 'required|string',
+            'addresses.house' => 'required|integer',
+            'addresses.apartment' => 'sometimes|integer',
+            'addresses.city' => 'required|string',
+            'addresses.state' => 'sometimes|string',
+            'addresses.postal_code' => 'required|integer',
+            'addresses.delivery_instruction' => 'required|string',
         ];
     }
 }

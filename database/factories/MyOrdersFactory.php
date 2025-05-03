@@ -10,6 +10,7 @@ class MyOrdersFactory extends Factory
     public function definition(): array
     {
         $orderDetailIds = DB::table('order_details')->pluck('id')->toArray();
+        $userIds = DB::table('users')->pluck('id')->toArray();
 
         return [
             'status' => fake()->randomElement(['notgondone', 'notdone', 'done']),
@@ -18,6 +19,7 @@ class MyOrdersFactory extends Factory
             'estimated_date' => fake()->date('Y_m_d'),
             'payment_method' => fake()->creditCardNumber('Visa', true),
             'order_details_id' => $orderDetailIds[array_rand($orderDetailIds)],
+            'user_id' => $userIds[array_rand($userIds)],
         ];
     }
 }

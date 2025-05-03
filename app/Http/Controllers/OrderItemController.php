@@ -2,36 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderDetailResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\OrderItemResource;
 use App\Http\Requests\OrderItem\DestroyRequest;
 use App\Http\Requests\OrderItem\StoreRequest;
 use App\Models\OrderDetail;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 
-/**
- * @OA\Tag(
- *     name="OrderItem",
- *     description="Operations related to order items"
- * )
- */
 class OrderItemController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/order-items",
-     *     tags={"OrderItem"},
-     *     summary="Get all order items",
-     *     @OA\Response(
-     *         response=200,
-     *         description="A list of order items",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="success", type="boolean"),
-     *             @OA\Property(property="orderItems", type="array", @OA\Items(ref="#/components/schemas/OrderItemResource"))
-     *         )
-     *     )
-     * )
-     */
     public function index(): JsonResponse
     {
         $orderItems = OrderItem::all();
@@ -43,52 +25,37 @@ class OrderItemController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/order-items",
-     *     tags={"OrderItem"},
-     *     summary="Create a new order item",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/StoreRequest")
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Order item created successfully",
-     *         @OA\JsonContent(ref="#/components/schemas/OrderItemResource")
-     *     )
-     * )
-     */
-    public function store(OrderDetail $orderDetail, StoreRequest $request) 
+    public function addOrderItem(OrderItem $orderItem, StoreRequest $request): array
     {
-        $cartItem = $orderDetail->orderItems()->create([
+        $orderItems = $orderItem->create([
             'quantity' => $request->item['quantity'],
+            'order_detail_id' => $request->orderdetail['id'],
             'product' => $request->product['id'],
         ]);
 
-        return new OrderItemResource($cartItem);
+        $orderDetail = OrderDetail::find($request->orderdetail['id']);
+        $product = Product::find($request->product['id']);
+
+        return [
+            'order_item' => new OrderItemResource($orderItems),
+            'order_detail' => $this->orderDetailResponse($orderDetail),
+            'product' => $this->productResponse($product),
+        ];
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/order-items/{id}",
-     *     tags={"OrderItem"},
-     *     summary="Delete an order item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="Order Item ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="Order item deleted successfully"
-     *     )
-     * )
-     */
-    public function destroy(OrderDetail $orderDetail, DestroyRequest $request): void
+    public function removeOrderItem(OrderItem $orderItem, DestroyRequest $request): ProductResource
     {
-        $orderDetail->delete();
+        $orderItem->delete();
+        return response()->json(['message' => 'Order Item deleted successfully'], 200);
+    }
+
+    public function orderDetailResponse(OrderDetail $orderDetail): OrderDetailResource
+    {
+        return new OrderDetailResource($orderDetail);
+    }
+
+    public function productResponse(Product $product): ProductResource
+    {
+        return new ProductResource($product);
     }
 }

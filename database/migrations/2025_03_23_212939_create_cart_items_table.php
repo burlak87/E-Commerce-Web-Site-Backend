@@ -23,10 +23,7 @@ return new class extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('cart_items');

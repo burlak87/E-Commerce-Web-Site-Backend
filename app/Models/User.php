@@ -11,20 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
-/**
- * @OA\Schema(
- *     title="User ",
- *     description="User  model",
- *     @OA\Property(property="id", type="integer", format="int64", description="ID of the user"),
- *     @OA\Property(property="first_name", type="string", description="First name of the user"), 
- *     @OA\Property(property="last_name", type="string", description="Last name of the user"),
- *     @OA\Property(property="email", type="string", format="email", description="Email address of the user"),
- *     @OA\Property(property="phone", type="string", description="Phone number of the user"),
- *     @OA\Property(property="role", type="string", description="Role of the user in the application"),
- *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the user was created"),
- *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the user was last updated")
- * )
- */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -41,7 +27,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'phone',
-        'password_hash',
+        'password',
         'role',
     ];
 
@@ -74,15 +60,15 @@ class User extends Authenticatable
     }
 
     public function wishlist(): HasOne {
-        return $this->hasOne(Wishlist::class, 'wishlist_id');
+        return $this->hasOne(Wishlist::class);
     }
 
     public function myorders(): HasMany {
-        return $this->hasMany(MyOrders::class, 'myorders_id');
+        return $this->hasMany(MyOrders::class);
     }
 
-    public function address(): HasMany {
-        return $this->hasMany(Address::class, 'address_id');
+    public function addresses(): HasMany {
+        return $this->hasMany(Address::class);
     }
 
     public function cart(): BelongsTo {

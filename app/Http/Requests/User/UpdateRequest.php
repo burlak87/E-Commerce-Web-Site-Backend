@@ -14,12 +14,12 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user.first_name' => 'sometimes|string|max:50',
-            'user.lost_name' => 'sometimes|string|max:50',
-            'user.role' => 'sometimes|string|max:255',
-            'user.phone' => 'sometimes|string|max:255',
-            'user.email' => 'sometimes|email|max:255|unique:users,email',
-            'user.password_hash' => 'sometimes',
+            'user.first_name' => 'sometimes|string',
+            'user.last_name' => 'sometimes|string',
+            'user.role' => 'sometimes|string',
+            'user.phone' => 'sometimes|string',
+            'user.email' => 'sometimes|email|unique:users,email,' . $this->user()->id,
+            'user.password' => 'nullable|string|min:8'
         ];
     }
 }

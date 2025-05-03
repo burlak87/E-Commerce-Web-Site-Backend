@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('my_orders', function (Blueprint $table) {
@@ -19,15 +16,15 @@ return new class extends Migration
             $table->date('estimated_date');
             $table->string('payment_method');
             $table->unsignedBigInteger('order_details_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->foreign('order_details_id')->references('id')->on('order_details')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('my_orders');

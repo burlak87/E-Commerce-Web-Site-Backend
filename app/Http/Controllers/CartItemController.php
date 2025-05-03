@@ -3,27 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CartItemResource;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Requests\CartItem\DestroyRequest;
 use App\Http\Requests\CartItem\StoreRequest;
 use App\Models\Cart;
+use App\Models\Product;
 use App\Models\CartItem;
 use Illuminate\Http\JsonResponse;
 
-/**
- * @OA\Tag(
- *     name="CartItem",
- *     description="Operations related to user cart items"
- * )
- */
 class CartItemController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/cart/items",
-     *     summary="Get all items in the cart",
-     *     @OA\Response(response="200", description="List of cart items")
-     * )
-     */
     public function index(): JsonResponse
     {
         $cartItems = CartItem::all();
@@ -35,48 +25,37 @@ class CartItemController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/cart/{cartId}/items",
-     *     summary="Add an item to the cart",
-     *     @OA\Parameter(
-     *         name="cartId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/CartItem")
-     *     ),
-     *     @OA\Response(response="201", description="Item added to cart")
-     * )
-     */
-    public function store(Cart $cart, StoreRequest $request) 
+    public function addCartItem(CartItem $cartItem, StoreRequest $request): array
     {
-        $cartItem = $cart->cartItems()->create([
+        $cartItems = $cartItem->create([
             'quantity' => $request->item['quantity'],
-            'product' => $request->product['id'],
+            'cart_id' => $request->cart['id'],
+            'product_id' => $request->product['id'],
         ]);
 
-        return new CartItemResource($cartItem);
+        $cart = Cart::find($request->cart['id']);
+        $product = Product::find($request->product['id']);
+
+        return [
+            'cart_item' => new CartItemResource($cartItems),
+            'cart' => $this->cartResponse($cart),
+            'product' => $this->productResponse($product),
+        ];
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/cart/items/{id}",
-     *     summary="Delete a cart item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response="204", description="Cart item deleted")
-     * )
-     */
-    public function destroy(CartItem $cartItem, DestroyRequest $request): void
+    public function removeCartItem(CartItem $cartItem, DestroyRequest $request): JsonResponse
     {
         $cartItem->delete();
+        return response()->json(['message' => 'Cart Item deleted successfully'], 200);
+    }
+
+    public function cartResponse(Cart $cart): CartResource
+    {
+        return new CartResource($cart);
+    }
+
+    public function productResponse(Product $product): ProductResource
+    {
+        return new ProductResource($product);
     }
 }

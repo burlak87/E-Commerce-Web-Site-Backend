@@ -8,26 +8,8 @@ use App\Http\Requests\Review\StoreRequest;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 
-/**
- * @OA\Tag(
- *     name="Reviews",
- *     description="Operations about reviews"
- * )
- */
 class ReviewController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/reviews",
-     *     tags={"Reviews"},
-     *     summary="Get list of reviews",
-     *     @OA\Response(
-     *         response=200,
-     *         description="A list of reviews",
-     *         @OA\JsonContent(ref="#/components/schemas/ReviewCollection")
-     *     )
-     * )
-     */
     public function index(): JsonResponse 
     {
         $reviews = Review::all();
@@ -39,24 +21,6 @@ class ReviewController extends Controller
         ])->setStatusCode(201);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/reviews/{id}",
-     *     tags={"Reviews"},
-     *     summary="Get a single review",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="A single review",
-     *         @OA\JsonContent(ref="#/components/schemas/ReviewResource")
-     *     )
-     * )
-     */
     public function show($id): JsonResponse
     {
         $review = Review::find($id);
@@ -67,51 +31,15 @@ class ReviewController extends Controller
         ])->setStatusCode(201);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/reviews",
-     *     tags={"Reviews"},
-     *     summary="Create a new review",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/ReviewRequest")
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Review created",
-     *         @OA\JsonContent(ref="#/components/schemas/ReviewResource")
-     *     )
-     * )
-     */
-    public function store(StoreRequest $request): ReviewResource 
+    public function store(StoreRequest $request): JsonResponse 
     {
-        $review = Review::create($request->validated()->all());
+        $review = Review::create($request->validated());
         return (new ReviewResource($review))->response()->setStatusCode(201);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/reviews/{id}",
-     *     tags={"Reviews"},
-     *     summary="Delete a review",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="Review deleted successfully"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Review not found"
-     *     )
-     * )
-     */
-    public function destroy(Review $review, DestroyRequest $request): void
+    public function destroy(Review $review, DestroyRequest $request): JsonResponse
     {
         $review->delete();
+        return response()->json(['message' => 'Review deleted successfully'], 200);
     }
 }

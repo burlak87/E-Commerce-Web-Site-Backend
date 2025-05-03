@@ -8,7 +8,8 @@ class DestroyAddressRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->route('address')->user->id === auth()->id();
+        $address = $this->route('address');
+        return $address && $address->user_id === auth()->id(); 
     }
 
     public function rules(): array

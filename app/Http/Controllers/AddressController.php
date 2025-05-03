@@ -9,13 +9,9 @@ use App\Http\Resources\AddressResource;
 use App\Http\Resources\AddressCollection;
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * @OA\Tag(
- *     name="Address",
- *     description="Operations related to user addresses"
- * )
- */
 class AddressController extends Controller
 {
     protected $address;
@@ -27,92 +23,53 @@ class AddressController extends Controller
         $this->user = $user;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/addresses",
-     *     summary="Get a list of addresses",
-     *     @OA\Response(response="200", description="A list of addresses")
-     * )
-     */
     public function index(): AddressCollection
     {
         return new AddressCollection($this->address->all());
     }
 
-    /**
-     * @OA\Get(
-     *     path="/addresses/{id}",
-     *     summary="Get a specific address",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response="200", description="Address details")
-     * )
-     */
-    public function show(Address $address): AddressResource
+    public function show($id): JsonResponse
     {
+        $address = Address::findOrFail($id);
+        return response()->json($address);
+    }
+
+    public function store(StoreAddressRequest $request)
+    {
+        $user = $request->user();
+
+        \Log::info('Authenticated user:', ['user' => $user]);
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $addressData = $request->validated()['addresses'];
+
+        if (empty($addressData['country']) || empty($addressData['street'])) {
+            return response()->json(['message' => 'Country and street are required'], 400);
+        }
+
+        $addressData['user_id'] = $user->id;
+
+        \Log::info('Address data before insert:', $addressData);
+
+        $address = $user->addresses()->create($addressData);
+
         return $this->addressResponse($address);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/addresses",
-     *     summary="Create a new address",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Address")
-     *     ),
-     *     @OA\Response(response="201", description="Address created")
-     * )
-     */
-    public function store(StoreAddressRequest $request): AddressResource
-    {
-        $address = auth()->user()->addresses()->create($request->validated()['addresses']);
-        return $this->addressResponse($address);
-    }
-
-    /**
-     * @OA\Put(
-     *     path="/addresses/{id}",
-     *     summary="Update an existing address",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/Address")
-     *     ),
-     *     @OA\Response(response="200", description="Address updated")
-     * )
-     */
     public function update(Address $address, UpdateAddressRequest $request): AddressResource
     {
         $address->update($request->validated()['address']);
         return $this->addressResponse($address);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/addresses/{id}",
-     *     summary="Delete an address",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(response="204", description="Address deleted")
-     * )
-     */
-    public function destroy(Address $address, DestroyAddressRequest $request): void
+    public function destroy(Address $address, DestroyAddressRequest $request): JsonResponse
     {
         $address->delete();
+
+        return response()->json(['message' => 'Address deleted successfully'], 200);
     }
 
     public function addressResponse(Address $address): AddressResource
